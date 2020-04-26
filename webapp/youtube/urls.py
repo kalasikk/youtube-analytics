@@ -18,5 +18,5 @@ from django.views.generic import ListView, DetailView
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.video, name='video')
+    url(r'^$', views.channels, name='channels')
 ]
