@@ -7,7 +7,7 @@ from .service import getChannelById
 from .forms import IdForm
 # Create your views here.
 
-def video(request):
+def channels(request):
     # response = requests.get('https://www.googleapis.com/youtube/v3/videos?part=statistics&id=HFyGEbLHM3A&key=AIzaSyC0ht_PIzPECVTM_BF9QzjhJLIDHR5aTd4')
     # data = response.json()
     form = IdForm
