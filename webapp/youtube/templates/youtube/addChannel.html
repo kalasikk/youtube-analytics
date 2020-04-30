@@ -1,0 +1,27 @@
+{% extends "mainApp/wrapper.html" %}
+
+{% block pageContent %}
+<div>
+   <div class="row">
+      <div class="col-xl-6 col-md-12 mb-12" style="margin: 10% 20%;">
+         <div class="card  shadow h-100 py-2">
+           <div class="card-body">
+             <div class="row no-gutters align-items-center">
+               <div class="col mr-2">
+                 <div class="h5 mb-0 font-weight-bold text-gray-800">Добавьте ID канала</div>
+                 <form method="post">
+                  {% csrf_token %}
+                  {{ form }}
+                  <input class="form-control" type="submit" value="Submit">
+              </form>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+   <!-- <h2 class="text-info">Название канала: {{channel.title}}</h2> 
+   <h6 class="text-info">Количество подписчиков: {{channel.subscriberCount}}</h6>
+    -->
+</div>
+</div>
+{% endblock %}
