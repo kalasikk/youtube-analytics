@@ -9,22 +9,51 @@
     <h1 class="my-4">{{channel.title}}
     </h1>
 
+    <!-- Portfolio Item Row -->
+  <div class="row">
+
+    <div class="col-md-8">
+      <img class="img-fluid" src="{{channel.banner}}" alt="Channel banner">
+    </div>
+
+    <div class="col-md-4">
+      <h3 class="my-3">Channel Description</h3>
+      <p>{{channel.description}}</p>
+      <h3 class="my-3">Channel Details</h3>
+      <ul  style="list-style-type:none">
+        <li><b>Subscriber Count: </b> {{channel.subscriberCount}}</li>
+        <li><b>Video Count: </b> {{channel.videoCount}}</li>
+        <li><b>View Count: </b> {{channel.viewCount}}</li>
+        <li><b>Published At: </b> {{channel.publishedAt}}</li>
+      </ul>
+    </div>
+
+  </div>
+  <!-- /.row -->
+  <hr>
+  <div class="row">
     {% for video in videos %}
     <!-- Project One -->
-    <div class="row">
-      <div class="col-md-7">
-        <a href="#">
-          <img class="img-fluid rounded mb-3 mb-md-0" src="{{video.thumbnail}}" alt="Video Banner">
-        </a>
+      <div class="col-lg-4 col-sm-6 mb-4">
+        <div class="card h-100">
+          <a href="#"><img class="card-img-top" src="{{video.thumbnail}}" alt=""></a>
+          <div class="card-body">
+            <h4 class="card-title">
+              <a href="#">{{video.title}}</a>
+            </h4>
+            <ul  style="list-style-type:none">
+              <li><b>Views:  </b> {{video.statistic.viewCount}}</li>
+              <li><b>Likes:  </b> {{video.statistic.likeCount}}</li>
+              <li><b>Dislikes:  </b> {{video.statistic.dislikeCount}}</li>
+              <li><b>Comments:  </b> {{video.statistic.commentCount}}</li>
+            </ul>
+            </div>
+        </div>
       </div>
-      <div class="col-md-5">
-        <h3>{{video.title}}</h3>
-        <p>{{video.description}}</p>
-      </div>
-    </div>
-    <hr>
     <!-- /.row -->
     {% endfor%}
+
+  </div>
     
 
 
