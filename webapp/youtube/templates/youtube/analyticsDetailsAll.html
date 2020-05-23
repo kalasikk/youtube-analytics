@@ -1,0 +1,160 @@
+{% extends "mainApp/wrapper.html" %}
+
+
+
+{% block pageContent %}
+
+  <!-- Page Content -->
+  <div class="container">
+
+
+    <h3>{{channel.title}}</h3>
+    <!-- Area Chart -->
+    <div class="col-xl-10 col-lg-7">
+        <div class="card shadow mb-4" style="width: 1000px;">
+          <!-- Card Header - Dropdown -->
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Genereal Videos Statistic in Channel</h6>
+            <div class="dropdown no-arrow">
+              <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+              </a>
+              <div id="filter-video-dropdown" class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                <div class="dropdown-header">Filter:</div>
+                <div class="dropdown-item" style="cursor: pointer;" data-url="{% url 'videos-bar-chart' sChannelId=channel.channel_id sType='viewCount' %}">Views</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" style="cursor: pointer;" data-url="{% url 'videos-bar-chart' sChannelId=channel.channel_id sType='likeCount' %}">Likes</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" style="cursor: pointer;" data-url="{% url 'videos-bar-chart' sChannelId=channel.channel_id sType='dislikeCount' %}" >Dislikes</div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" style="cursor: pointer;" data-url="{% url 'videos-bar-chart' sChannelId=channel.channel_id sType='commentCount' %}" >Comments</div>
+              </div>
+            </div>
+          </div>
+          <!-- Card Body -->
+          <div class="card-body" style="height: 500px; width: 1000px;">
+            <div class="chart-area">
+              <canvas id="myBarChart" data-url="{% url 'videos-bar-chart' sChannelId=channel.channel_id sType='likeCount' %}"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+  </div>
+  <!-- /.container -->
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script>
+
+  function onInitVideosBarCanvas(aLabels,aData,sTitle){
+    var ctx = document.getElementById('myBarChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: aLabels,
+          datasets: [{
+              data: aData,
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)'
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+        legend: {
+            display: false,
+        },
+        responsive: true,
+          title:{
+            display: true,
+            text: sTitle
+          },
+          scales: {
+            xAxes: [{
+              ticks: {
+                  callback: function(value) {
+                      return value.substr(0, 27);
+                  },
+              }
+          }],
+            yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          }
+      }
+  });
+  $('#myBarChart').data('myChart', myChart);
+  }
+
+function setDataChart(aData,sType){
+  const chart = $("#myBarChart").data('myChart')
+  chart.data.datasets=[{
+              data: aData,
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)'
+              ],
+              borderWidth: 1
+          }]
+  chart.options.title.text = sType
+  chart.update()
+}
+  
+
+const filterVideoDropdown = document.querySelector('#filter-video-dropdown')
+filterVideoDropdown.addEventListener('click',onVideoFilterDropdownClick);
+
+function onVideoFilterDropdownClick(oEvent){
+  $.ajax({
+  url: oEvent.target.getAttribute("data-url"),
+  success: function (data) {
+
+    setDataChart(Object.values(data.data),oEvent.target.innerText)
+    }
+
+  })
+}
+
+$(function () {
+  const $barChart = $("#myBarChart");
+$.ajax({
+  url: $barChart.data("url"),
+  success: function (data) {
+
+    onInitVideosBarCanvas(data.labels,Object.values(data.data),'Likes')
+    }
+
+  })
+});
+
+
+
+
+
+</script>
+
+{% endblock %}
