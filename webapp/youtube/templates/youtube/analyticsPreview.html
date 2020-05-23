@@ -1,0 +1,47 @@
+{% extends "mainApp/wrapper.html" %}
+{% load static %}
+{% block pageContent %}
+<div class="container-fluid">
+    
+             
+    <div class="row">
+      <div class="col-xl-6 col-md-6 mb-4">
+        <div class="card  shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="h5 mb-0 font-weight-bold text-gray-800">All videos statistics</div>
+                </div>
+              <div class="col mr-2">
+                <img src="{% static 'mainApp/image/bar_chart1.png' %}" class="img-thumbnail" style="width: 150px; height: 150px; margin: 5px;" alt="Bar Chart Example">
+                <a class="btn btn-primary" href="{% url 'analyticsDetailsAll' sChannelId=channel_id %}">View Chart</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-6 col-md-6 mb-4">
+        <div class="card  shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="h5 mb-0 font-weight-bold text-gray-800">Monitoring videos</div>
+                </div>
+              <div class="col mr-2">
+                <img src="{% static 'mainApp/image/line_chart.png' %}" class="img-thumbnail" style="width: 150px; height: 150px; margin: 5px;" alt="Line Chart Example">
+                <a class="btn btn-primary" href="{% url 'analyticsDetailsMonitoring' sChannelId=channel_id %}">View Chart</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Content Row -->
+
+    
+
+
+  </div>
+
+{% endblock %}

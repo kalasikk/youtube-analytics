@@ -19,7 +19,7 @@
       <div class="col-md-5">
         <h3>{{channel.title}}</h3>
         <p>{{channel.description}}</p>
-        <a class="btn btn-primary" href="{% url 'analyticsDetails' sChannelId=channel.channel_id %}">View Chart</a>
+        <a class="btn btn-primary" href="{% url 'analyticsPreview' sChannelId=channel.channel_id %}">View Chart</a>
       </div>
     </div>
     <hr>
