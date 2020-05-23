@@ -46,8 +46,19 @@
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 <script>
-
+  function getRandomRgb(iNumberOfData) {
+    let aRGBA = []
+    for(let i = 0; i < iNumberOfData;i++){
+      var num = Math.round(0xffffff * Math.random());
+      var r = num >> 16;
+      var g = num >> 8 & 255;
+      var b = num & 255;
+      aRGBA.push('rgb(' + r + ', ' + g + ', ' + b + ')');
+    }
+    return aRGBA
+}
   function onInitVideosBarCanvas(aLabels,aData,sTitle){
+    const aColors = getRandomRgb(aData.length)
     var ctx = document.getElementById('myBarChart').getContext('2d');
     var myChart = new Chart(ctx, {
       type: 'bar',
@@ -55,20 +66,8 @@
           labels: aLabels,
           datasets: [{
               data: aData,
-              backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)'
-              ],
-              borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)'
-              ],
+              backgroundColor: aColors,
+              borderColor: aColors,
               borderWidth: 1
           }]
       },
