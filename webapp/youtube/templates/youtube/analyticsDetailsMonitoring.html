@@ -7,10 +7,26 @@
   <!-- Page Content -->
   <div class="container">
 
+    <div class="row">
+      <div class="col-xl-10 col-lg-7">
+        <h3>{{channel.title}}</h3>
+      </div>
 
-    <h3>{{channel.title}}</h3>
+  <div class="col-xl-2">
+    <div class="dropdown">
+      <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Videos
+      </button>
+      <div id='videoDropdownId' class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <div class="dropdown-item" style="cursor: pointer;">All Videos</div>
+        
+      </div>
+    </div>
+  </div>
+  </div>
     <!-- Area Chart -->
-    <div class="col-xl-10 col-lg-7">
+    <div class="row">
+    <div class="col-xl-8 col-lg-7">
         <div class="card shadow mb-4" style="width: 1000px;">
           <!-- Card Body -->
           <div class="card-body" style="height: 500px; width: 1000px;">
@@ -20,6 +36,8 @@
           </div>
         </div>
       </div>
+    
+    </div>  
     
   </div>
   <!-- /.container -->
@@ -93,6 +111,7 @@
           }
       }
   });
+  $('#myLineChart').data('myChart', myChart);
   }
 
 $(function () {
@@ -111,12 +130,97 @@ $.ajax({
         }
       }
     })
-
     onInitVideosLineCanvas(data.labels,aData,Object.keys(data.data))
+    addVideosToDropdown(Object.keys(data.data))
     }
 
   })
 });
+
+function addVideosToDropdown(aVideos){
+const oDropdown = document.querySelector('#videoDropdownId');
+aVideos.forEach(sVideoName=>{
+  oDropdown.appendChild(createVideoDropdownItem(sVideoName))
+})
+oDropdown.addEventListener('click',onVideosDropdownClick)
+}
+
+function createVideoDropdownItem(sName){
+  let div = document.createElement('div');
+  div.innerHTML = sName;
+  div.className = "dropdown-item";
+  div.style = "cursor: pointer;"
+  return div
+}
+
+function onVideosDropdownClick(oEvent){
+  const sVideoName = oEvent.target.innerHTML;
+  const $lineChart = $("#myLineChart");
+$.ajax({
+  url: $lineChart.data("url"),
+  success: function (data) {
+    if(sVideoName == 'All Videos'){
+      let aData = Object.values(data.data);
+      const iLabelsNumber = data.labels.length;
+      
+      aData.map((aDataArray,iIndex)=>{
+        if(aDataArray.length < iLabelsNumber){
+          let iDataArrayLen = aDataArray.length;
+          for(let i=0; i < iLabelsNumber - iDataArrayLen;i++){
+            aDataArray.unshift(null)
+          }
+        }
+      })
+
+      setAllVideosLineCanvas(aData,data.labels,Object.keys(data.data))
+    }
+    else{
+      const aVideoData = data.data[sVideoName];
+      const aVideoLabels = data.labels.slice(data.labels.length - aVideoData.length);
+    
+      setDataChart(aVideoData,aVideoLabels,sVideoName)
+      }
+    }
+
+  })
+}
+
+function setDataChart(aData,aLabels,sVideoName){
+  const chart = $("#myLineChart").data('myChart')
+  const aBackgroundColors = getRandomRgb(aData.length)
+  const aBackgroundBorders = aBackgroundColors
+  chart.data.datasets=[{
+              data: aData,
+              fill: false,
+              label: sVideoName,
+              backgroundColor: aBackgroundColors[0],
+              borderColor: aBackgroundBorders[0],
+              borderWidth: 1
+          }]
+  chart.data.labels = aLabels
+  chart.update()
+}
+
+function setAllVideosLineCanvas(aData,aLabels,aVideoTitles){
+    const chart = $("#myLineChart").data('myChart')
+    const aBackgroundColors = getRandomRgb(aData.length)
+    const aBackgroundBorders = aBackgroundColors
+    let aDataset = [];
+    for(let i=0;i<aData.length;i++){
+      aDataset.push({
+              label: aVideoTitles[i],
+              data: aData[i],
+              fill: false,
+              backgroundColor: aBackgroundColors[i],
+              borderColor: aBackgroundBorders[i],
+              borderWidth: 1
+      })
+    }
+    chart.data.datasets = aDataset
+    chart.data.labels = aLabels
+    chart.update()
+    }
+  
 
 
 </script>
